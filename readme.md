@@ -1,9 +1,15 @@
-activate virtual env by opening termminal at the comp306-mackolik folder and then running 
-source .venv/bin/activate
+Installing dependencies for mac look internet for windows
+https://stackoverflow.com/questions/7225900/how-can-i-install-packages-using-pip-according-to-the-requirements-txt-file-from
 
-deactivate it by deactivating.
+pip3 install -r requirements.txt
 
-For interpreter if you are using vscode choose the path of .venv as interpreter
+installing npm =>
+nodeenv -p
+npm install -g npm
+
+check if installed by
+
+npm -v
 
 before running create .env file in comp306-mackolik and write your database information inside as shown below. Don't put " for strings
 
