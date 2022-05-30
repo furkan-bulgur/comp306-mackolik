@@ -11,7 +11,7 @@ check if installed by
 
 $npm -v
 
-before running create .env file in comp306-mackolik and write your database information inside as shown below. Don't put " for strings
+before running create .env file in backend and write your database information inside as shown below. Don't put " for strings
 
 DB_USER=<yourdatabaseusername>
 PASSWORD=<yourpassword>
