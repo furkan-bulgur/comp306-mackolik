@@ -5,8 +5,7 @@ deactivate it by deactivating.
 
 For interpreter if you are using vscode choose the path of .venv as interpreter
 
-before running create .env and write your database information inside 
-as shown below
+before running create .env file in comp306-mackolik and write your database information inside as shown below. Don't put " for strings
 
 DB_USER=<yourdatabaseusername>
 PASSWORD=<yourpassword>
