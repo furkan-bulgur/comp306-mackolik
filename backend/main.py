@@ -12,8 +12,11 @@ conn = mysql.connector.connect(user=os.environ.get("DB_USER"),
                                 host=os.environ.get("HOST"),
                                 database=os.environ.get("DATABASE"))
 
-
 @app.route('/')
+def landing():
+    return "Welcome to Mackolik"
+
+@app.route('/api', methods=['GET'])
 def premier_league_teams():
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM team WHERE lid=39")
@@ -23,6 +26,3 @@ def premier_league_teams():
     for result in result:
             json_data.append(dict(zip(row_headers,result)))
     return json.dumps(json_data)
-
-if __name__ == "__main__":
-    app.run(host='localhost', port=5001)
