@@ -5,3 +5,10 @@ deactivate it by deactivating.
 
 For interpreter if you are using vscode choose the path of .venv as interpreter
 
+before running create .env and write your database information inside 
+as shown below
+
+DB_USER=<yourdatabaseusername>
+PASSWORD=<yourpassword>
+HOST=localhost
+DATABASE=<databasename>
