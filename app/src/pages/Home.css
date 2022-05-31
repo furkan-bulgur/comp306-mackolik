@@ -12,5 +12,9 @@
     margin: auto 1.5em;
     border: 1px solid black;
     padding: 0.5em;
-    background-color: azure;
-  }
+    background-color: lightcyan;
+}
+
+.league-list li:hover{
+    background-color: aquamarine;
+}
