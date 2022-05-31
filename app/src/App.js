@@ -1,20 +1,26 @@
 import './App.css';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+import Home from './pages/Home'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 function App() {
-  const [initialData, setInitialData] = useState([{}])
 
-  useEffect(() => {
-    fetch("/api").then(
-      response => response.json()
-    ).then(data=>setInitialData(data))
-  }, []);
-  const teams = initialData.map((team) => team.name)
   return (
-    <div className="App">
-      <ul>{teams.map((team) => <li>{team}</li>)}</ul>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
+
+
+
+
+  
 }
 
 export default App;

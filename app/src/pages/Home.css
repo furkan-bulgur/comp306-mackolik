@@ -1,0 +1,16 @@
+.league-list{
+    text-align: center;
+    font-size: 1.2em;
+    border: 1px solid black;
+    background-color: lightblue;
+}
+.league-list h1{
+    margin-bottom: 1em;
+}
+.league-list li{
+    display: inline;
+    margin: auto 1.5em;
+    border: 1px solid black;
+    padding: 0.5em;
+    background-color: azure;
+  }
