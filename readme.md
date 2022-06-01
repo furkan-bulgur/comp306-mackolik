@@ -11,6 +11,11 @@ check if installed by
 
 $npm -v
 
+Needed npm installmentes
+
+ npm install react-router-dom
+ npm install --save styled-components
+
 before running create .env file in backend and write your database information inside as shown below. Don't put " for strings
 
 DB_USER=<yourdatabaseusername>

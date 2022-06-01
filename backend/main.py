@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import mysql.connector
 import json
 from dotenv import load_dotenv
@@ -18,15 +18,9 @@ def landing():
     return "Welcome to Mackolik"
 
 @app.route('/leagues')
-def leagues():
-    cursor = conn.cursor()
-    cursor.execute("SELECT lid, name FROM league")
-    row_headers=[x[0] for x in cursor.description] #this will extract row headers
-    result = cursor.fetchall()
-    json_data=[]
-    for result in result:
-            json_data.append(dict(zip(row_headers,result)))
-    return json.dumps(json_data)
+def get_league():
+    lid = request.args.get("lid", default=None)
+    return leagues(lid)
 
 @app.route('/api', methods=['GET'])
 def get_league_teams():
@@ -40,6 +34,11 @@ def get_team_info():
 def get_team_matches():
     return team_matches(165)
 
+def leagues(lid=None):
+    cursor = conn.cursor()
+    query = "SELECT * FROM league" if lid is None else f"SELECT * FROM league WHERE lid = {lid}"
+    cursor.execute(query)
+    return convert_to_json(cursor)
 
 def league_teams(lid):
     cursor = conn.cursor()
@@ -72,6 +71,16 @@ def team_matches(tid):
             json_data.append(dict(zip(row_headers,result)))
     print(json.dumps(json_data, cls=DatetimeEncoder))
     return json.dumps(json_data, cls=DatetimeEncoder)
+
+
+def convert_to_json(cursor):
+    row_headers=[x[0] for x in cursor.description] #this will extract row headers
+    result = cursor.fetchall()
+    json_data=[]
+    for result in result:
+            json_data.append(dict(zip(row_headers,result)))
+    return json.dumps(json_data, cls=DatetimeEncoder)
+
 
 class DatetimeEncoder(json.JSONEncoder):
     def default(self, obj):
