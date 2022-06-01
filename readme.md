@@ -34,3 +34,10 @@ $npm run start-flask-server
 then also in app folder run this command to run the frontend
 
 $npm start
+
+Possible errors:
+If there is an error in npm start 
+
+Go to package.json > scripts > start and replace
+"react-scripts --openssl-legacy-provider start" with
+"react-scripts start"
