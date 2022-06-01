@@ -22,9 +22,10 @@ def get_league():
     lid = request.args.get("lid", default=None)
     return leagues(lid)
 
-@app.route('/api', methods=['GET'])
+@app.route('/leagues/teams', methods=['GET'])
 def get_league_teams():
-    return league_teams(39)
+    lid = request.args.get("lid", default=None)
+    return league_teams(lid)
 
 @app.route('/team', methods=['GET'])
 def get_team_info():
@@ -42,13 +43,9 @@ def leagues(lid=None):
 
 def league_teams(lid):
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM team WHERE lid = ' + str(lid))
-    row_headers=[x[0] for x in cursor.description] #this will extract row headers
-    result = cursor.fetchall()
-    json_data=[]
-    for result in result:
-            json_data.append(dict(zip(row_headers,result)))
-    return json.dumps(json_data)
+    query = f"SELECT * FROM team WHERE lid = {lid} ORDER BY team.rank ASC"
+    cursor.execute(query)
+    return convert_to_json(cursor)
 
 def team_info(tid):
     cursor = conn.cursor()
