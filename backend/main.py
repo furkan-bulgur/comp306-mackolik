@@ -92,14 +92,9 @@ ORDER BY M.date ASC;"""
 
 def team_info(tid):
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM player WHERE tid=' + str(tid))
-    row_headers=[x[0] for x in cursor.description] #this will extract row headers
-    result = cursor.fetchall()
-    json_data=[]
-    for result in result:
-            json_data.append(dict(zip(row_headers,result)))
-    print(json.dumps(json_data, cls=DatetimeEncoder))
-    return json.dumps(json_data, cls=DatetimeEncoder)
+    query = f"SELECT * FROM team WHERE tid = {tid}"
+    cursor.execute(query)
+    return convert_to_json(cursor)
 
 def team_matches(tid):
     cursor = conn.cursor()
