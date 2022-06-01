@@ -42,7 +42,7 @@ def get_league_weeks():
 
 # hafta velig parameteliyle o haftanın fistrü maçalrı leagues/fixtures?lid=12&week=21 +
 @app.route('/leagues/fixtures', methods=['GET'])
-def get_league_weeks():
+def get_league_fixtures():
     lid = request.args.get("lid", default=None)
     week = request.args.get("week", default=None)
     return league_fixtures(lid,week)
@@ -52,6 +52,18 @@ def get_league_weeks():
 def get_team_info():
     tid = request.args.get("lid", default=None)
     return team_info(tid)
+
+# gol krallığı ilk 10 leagues/scorers?lid=12
+@app.route('/leagues/scorers', methods=['GET'])
+def get_league_scorers():
+    lid = request.args.get("lid", default=None)
+    return league_scorers(lid)
+
+# asist krallığı ilk 10 leagues/assisters?lid=12
+@app.route('/leagues/assisters', methods=['GET'])
+def get_league_assisters():
+    lid = request.args.get("lid", default=None)
+    return league_assisters(lid)
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
@@ -84,15 +96,45 @@ def league_weeks(lid):
 def league_fixtures(lid, week):
     cursor = conn.cursor()
     query = f"""SELECT P.*, M.*, T1.name as home_team, T2.Name as away_team
-FROM 306db.plays as P, 306db.matches as M, 306db.team as T1, 306db.team as T2, 306db.league as L
-WHERE P.mid = M.mid and T1.tid = P.home_tid and T2.tid = P.away_tid and T1.lid = L.lid and L.lid = {lid}  and M.week = {week} 
-ORDER BY M.date ASC;"""
+    FROM 306db.plays as P, 306db.matches as M, 306db.team as T1, 306db.team as T2, 306db.league as L 
+    WHERE P.mid = M.mid and T1.tid = P.home_tid and T2.tid = P.away_tid and T1.lid = L.lid and L.lid = {lid}  and M.week = {week} 
+    ORDER BY M.date ASC;"""
     cursor.execute(query)
     return convert_to_json(cursor)
 
 def team_info(tid):
     cursor = conn.cursor()
     query = f"SELECT * FROM team WHERE tid = {tid}"
+    cursor.execute(query)
+    return convert_to_json(cursor)
+
+def league_scorers(lid):
+    cursor = conn.cursor()
+    query = f"""SELECT Pl.pid, T.name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , team_total.team_goals as total_goals
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T, (SELECT T.tid ,Sum(P.total_goals) as team_goals
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}
+    group by T.tid
+    order by team_goals DESC) as team_total
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid} and team_total.tid= T.tid
+    group by P.pid
+    order by goals DESC
+    LIMIT 10;"""
+    cursor.execute(query)
+    return convert_to_json(cursor)
+
+def league_assisters(lid):
+    cursor = conn.cursor()
+    query = f"""SELECT Pl.pid, T.name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , team_total.team_goals as total_goals
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T, (SELECT T.tid ,Sum(P.total_goals) as team_goals
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {tid}
+    group by T.tid
+    order by team_goals DESC) as team_total
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {tid} and team_total.tid= T.tid
+    group by P.pid
+    order by assists DESC
+    LIMIT 10;"""
     cursor.execute(query)
     return convert_to_json(cursor)
 
@@ -129,9 +171,9 @@ class DatetimeEncoder(json.JSONEncoder):
 # Puan durumu ordered leagues/standings?lid=12 +
 # ligde kaçta hafta olduğunun döndüren leagues/weeks?lid=12 +
 # hafta velig parameteliyle o haftanın fistrü maçalrı leagues/fixtures?lid=12&week=21 +
-# gol krallığı ilk 10 leagues/scorer?lid=12
-# asist krallığı ilk 10 leagues/assister?lid=12
+# gol krallığı ilk 10 leagues/scorers?lid=12
+# asist krallığı ilk 10 leagues/assisters?lid=12
 # disiplin tablosu ilk 10 leagues/cards?lid=12
-# takım idyi verince select all döndüren bi qurery teams?tid=123 
+# takım idyi verince select all döndüren bi qurery teams?tid=123 +
 # takımlar listesi * ve isim sırasıda göre leagues/teams?lid=12 +
 
