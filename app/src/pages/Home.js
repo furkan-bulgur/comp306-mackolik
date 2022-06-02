@@ -1,5 +1,4 @@
 import React, {useState, useEffect}  from "react";
-import "./Home.css"
 import {
     Link
 } from "react-router-dom";
@@ -19,12 +18,13 @@ function Home (){
     function Leagues(props) {
         return (
         <div>
+            <h1>{props.title}</h1>
             <ul>
                 {props.leagues.map((league) => {
                     return (
                     <li key={'' + league.lid}>
                         <Link to={{
-                            pathname: `/league/${league.lid}`,
+                            pathname: `/league/standings/${league.lid}`,
                         }}>
                             {league.name}
                         </Link>
@@ -44,9 +44,8 @@ function Home (){
             <h5>Burhan Özer Çavdar</h5>
             <h5>Talha Enes Güler</h5>
         </div> */
-        <div className="league-list">
-            <h1>Mini-Mackolik</h1>
-            <Leagues leagues={leagues} />
+        <div className="header">
+            <Leagues leagues={leagues} title="Mini Mackolik"/>
         </div>   
     );
 }

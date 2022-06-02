@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import Home from './pages/Home'
-import League from './pages/League';
+import LeagueStandings from './pages/LeagueStandings';
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +14,7 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Home />} />
-        <Route exact path="/league/:lid" element={<League />} />
+        <Route path="/league/standings/:lid" element={<LeagueStandings />} />
       </Routes>
     </Router>
   );
