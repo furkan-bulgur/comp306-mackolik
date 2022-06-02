@@ -128,10 +128,10 @@ def league_assisters(lid):
     query = f"""SELECT Pl.pid, T.name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , team_total.team_goals as total_goals
     FROM 306db.plays_in as P , player as Pl, league as L, team as T, (SELECT T.tid ,Sum(P.total_goals) as team_goals
     FROM 306db.plays_in as P , player as Pl, league as L, team as T
-    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {tid}
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}
     group by T.tid
     order by team_goals DESC) as team_total
-    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {tid} and team_total.tid= T.tid
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid} and team_total.tid= T.tid
     group by P.pid
     order by assists DESC
     LIMIT 10;"""
@@ -171,8 +171,8 @@ class DatetimeEncoder(json.JSONEncoder):
 # Puan durumu ordered leagues/standings?lid=12 +
 # ligde kaçta hafta olduğunun döndüren leagues/weeks?lid=12 +
 # hafta velig parameteliyle o haftanın fistrü maçalrı leagues/fixtures?lid=12&week=21 +
-# gol krallığı ilk 10 leagues/scorers?lid=12
-# asist krallığı ilk 10 leagues/assisters?lid=12
+# gol krallığı ilk 10 leagues/scorers?lid=12 +
+# asist krallığı ilk 10 leagues/assisters?lid=12 +
 # disiplin tablosu ilk 10 leagues/cards?lid=12
 # takım idyi verince select all döndüren bi qurery teams?tid=123 +
 # takımlar listesi * ve isim sırasıda göre leagues/teams?lid=12 +
