@@ -2,9 +2,10 @@ import React, {useState, useEffect}  from "react";
 import {useParams} from "react-router-dom";
 import {LeagueHeader, Standings} from "./LeagueComponents.js"
 
-function LeagueStandings(){
+function LeagueStandings(props){
     const {lid} = useParams();
     const [data, setData] = useState([{}])
+    
     useEffect(() => {
         if(lid){
             fetch(`/leagues/standings?lid=${lid}`).then(

@@ -58,3 +58,11 @@ code {
   text-align: center;
   border: 1px solid #03045e;
 }
+
+.league_table a, a:visited, a:link{
+  text-decoration: none;
+  color: #03045e;
+}
+.league_table a:hover{
+  color: #48cae4;
+}

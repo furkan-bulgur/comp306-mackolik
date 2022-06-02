@@ -39,11 +39,26 @@ function Standings(props) {
                     </thead>
                     <tbody>
                         {props.standings.map((standing) => (
-                            <tr key={standing.tid}>
-                                {Object.values(standing).slice(1).map((val) => (
-                                    <td>{val}</td>
-                                ))}
-                            </tr>
+                            
+                                <tr key={standing.tid}>
+                                        {Object.values(standing).slice(1).map((val, index) => {
+                                                if(index === 1){
+                                                    return (
+                                                        <td>
+                                                            <Link to={{
+                                                                pathname: `/team/squad/${standing.tid}`,
+                                                            }}>
+                                                                {val}
+                                                            </Link>
+                                                        </td>
+                                                    )
+                                                }else{
+                                                    return <td>{val}</td>
+                                                }   
+                                            })
+                                        }
+                                </tr>
+                            
                         ))}
                     </tbody>
                 </table>
