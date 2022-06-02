@@ -18,6 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start-flask-server": "cd .. && cd backend && flask run --port=5306",
+    "start-flask-v2": "cd .. && cd backend && python -m flask run --port=5306",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
