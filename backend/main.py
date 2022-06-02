@@ -83,7 +83,7 @@ def league_teams(lid):
 
 def league_standings(lid):
     cursor = conn.cursor()
-    query = f"SELECT tid, name, played,won,draw,loss, goals_for,goals_against,goalsDiff,points FROM team as T WHERE lid={lid}  ORDER BY T.rank asc;"
+    query = f"SELECT tid, T.rank, name, played,won,draw,loss, goals_for,goals_against,goalsDiff,points FROM team as T WHERE lid={lid}  ORDER BY T.rank asc;"
     cursor.execute(query)
     standings_json = convert_to_json(cursor)
     query = f"SELECT lid, name FROM league WHERE lid={lid}"

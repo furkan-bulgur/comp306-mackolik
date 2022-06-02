@@ -41,3 +41,20 @@ code {
 .header a:visited, .header a:link{
   color: #03045e;
 }
+
+.league_table{
+  text-align: center;
+}
+
+.league_table table{
+  margin-top: 2em;
+  margin-bottom: 3em;
+  display: inline-block;
+  border: 1px solid #03045e;
+  border-collapse: collapse;
+}
+.league_table td, th{
+  padding: 0.5em;
+  text-align: center;
+  border: 1px solid #03045e;
+}
