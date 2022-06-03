@@ -111,9 +111,9 @@ def league_weeks(lid):
 
 def league_fixtures(lid, week):
     cursor = conn.cursor()
-    query = f"""SELECT P.*, M.*, T1.name as home_team, T2.Name as away_team
+    query = f"""SELECT P.mid, P.home_tid, P.away_tid, M.week, M.date, T1.name as home_team, M.home_goals, M.away_goals,T2.Name as away_team, M.referee
     FROM plays as P, matches as M, team as T1, team as T2, league as L 
-    WHERE P.mid = M.mid and T1.tid = P.home_tid and T2.tid = P.away_tid and T1.lid = L.lid and L.lid = {lid}  and M.week = {week} 
+    WHERE P.mid = M.mid and T1.tid = P.home_tid and T2.tid = P.away_tid and T1.lid = L.lid and L.lid = {lid}  and M.week = {week}
     ORDER BY M.date ASC;"""
     cursor.execute(query)
     fixtures_json = convert_to_json(cursor)
