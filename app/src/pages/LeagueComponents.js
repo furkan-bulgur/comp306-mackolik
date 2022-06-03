@@ -4,6 +4,11 @@ import { Link } from "react-router-dom";
 function LeagueHeader(props) {
   return (
     <div className="header">
+      <Link to={{
+              pathname: `/`,
+            }}>
+              Home
+      </Link>
       <h1>{props.title}</h1>
       <ul>
         <li>
@@ -22,6 +27,15 @@ function LeagueHeader(props) {
             }}
           >
             Goal Leadership
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={{
+              pathname: `/league/assistleadership/${props.lid}`,
+            }}
+          >
+            Assist Leadership
           </Link>
         </li>
       </ul>
@@ -82,45 +96,45 @@ function Standings(props) {
 }
 
 function GoalLeadership(props) {
-  if (props.display) {
+  if (props.scorers) {
     return (
       <div className="league_table">
         <table>
           <thead>
             <tr>
               <th>Rank</th>
+              <th>Team</th>
               <th>Player Name</th>
-              <th>Played</th>
-              <th>First 11</th>
-              <th>Minutes</th>
-              <th>Penalties</th>
-              <th>Goal</th>
+              <th>Played Match</th>
+              <th>Played Minutes</th>
+              <th>Goals</th>
+              <th>Assists</th>
               <th>Goal Per Match</th>
             </tr>
           </thead>
           <tbody>
-            {/* {props.standings.map((standing) => (
-                            
-                                <tr key={standing.tid}>
-                                        {Object.values(standing).slice(1).map((val, index) => {
-                                                if(index === 1){
-                                                    return (
-                                                        <td>
-                                                            <Link to={{
-                                                                pathname: `/team/squad/${standing.tid}`,
-                                                            }}>
-                                                                {val}
-                                                            </Link>
-                                                        </td>
-                                                    )
-                                                }else{
-                                                    return <td>{val}</td>
-                                                }   
-                                            })
+            {props.scorers.map((scorer, index) => (          
+                                <tr key={scorer.pid}>
+                                  <td>{index+1}</td>
+                                    {Object.values(scorer).slice(2).map((val,inner) => {
+                                        if(inner === 0){
+                                          return (<td>
+                                            <Link
+                                              to={{
+                                                pathname: `/team/squad/${scorer.tid}`,
+                                              }}
+                                            >
+                                              {val}
+                                            </Link>
+                                          </td>);
+                                        }else{
+                                          return <td>{val}</td> 
                                         }
+                                      })
+                                    }
                                 </tr>
                             
-                        ))} */}
+                        ))}
           </tbody>
         </table>
       </div>
@@ -130,4 +144,53 @@ function GoalLeadership(props) {
   }
 }
 
-export { LeagueHeader, Standings, GoalLeadership };
+function AssistLeadership(props) {
+  if (props.assisters) {
+    return (
+      <div className="league_table">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Team</th>
+              <th>Player Name</th>
+              <th>Played Match</th>
+              <th>Played Minutes</th>
+              <th>Goals</th>
+              <th>Assists</th>
+              <th>Assists Per Match</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.assisters.map((assister, index) => (          
+                                <tr key={assister.pid}>
+                                  <td>{index+1}</td>
+                                    {Object.values(assister).slice(2).map((val,inner) => {
+                                        if(inner === 0){
+                                          return (<td>
+                                            <Link
+                                              to={{
+                                                pathname: `/team/squad/${assister.tid}`,
+                                              }}
+                                            >
+                                              {val}
+                                            </Link>
+                                          </td>);
+                                        }else{
+                                          return <td>{val}</td> 
+                                        }
+                                      })
+                                    }
+                                </tr>
+                            
+                        ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
+export { LeagueHeader, Standings, GoalLeadership, AssistLeadership };

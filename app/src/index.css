@@ -49,6 +49,8 @@ code {
 .league_table table{
   margin-top: 2em;
   margin-bottom: 3em;
+  margin-left: 2em;
+  margin-right: 2em;
   display: inline-block;
   border: 1px solid #03045e;
   border-collapse: collapse;

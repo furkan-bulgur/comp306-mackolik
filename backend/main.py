@@ -89,7 +89,7 @@ def league_teams(lid):
 
 def league_standings(lid):
     cursor = conn.cursor()
-    query = f"SELECT tid, rank, name, played,won,draw,loss, goals_for,goals_against,goalsDiff,points FROM team as T WHERE lid={lid}  ORDER BY T.rank asc;"
+    query = f"SELECT tid, T.rank, name, played,won,draw,loss, goals_for,goals_against,goalsDiff,points FROM team as T WHERE lid={lid}  ORDER BY T.rank asc;"
     cursor.execute(query)
     standings_json = convert_to_json(cursor)
     query = f"SELECT lid, name FROM league WHERE lid={lid}"
@@ -131,7 +131,7 @@ def team_info(tid):
 
 def league_scorers(lid):
     cursor = conn.cursor()
-    query = f"""SELECT Pl.pid, T.name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , team_total.team_goals as total_goals
+    query = f"""SELECT Pl.pid, T.tid, T.name as team_name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.total_goals)/Count(*) as goal_per_match
     FROM plays_in as P , player as Pl, league as L, team as T, (SELECT T.tid ,Sum(P.total_goals) as team_goals
     FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}
@@ -151,7 +151,7 @@ def league_scorers(lid):
 
 def league_assisters(lid):
     cursor = conn.cursor()
-    query = f"""SELECT Pl.pid, T.name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , team_total.team_goals as total_goals
+    query = f"""SELECT Pl.pid, T.tid, T.name as team_name, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.assists)/Count(*) as assists_per_match
     FROM plays_in as P , player as Pl, league as L, team as T, (SELECT T.tid ,Sum(P.total_goals) as team_goals
     FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}

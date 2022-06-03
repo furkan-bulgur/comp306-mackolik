@@ -8,17 +8,17 @@ function LeagueGoalLeadership(props) {
 
   useEffect(() => {
     if (lid) {
-      fetch(`/leagues/standings?lid=${lid}`)
+      fetch(`/leagues/scorers?lid=${lid}`)
         .then((response) => response.json())
         .then((data) => setData(data));
     }
   }, []);
 
-  const league = data[0];
+  const scorers = data[0];
   return (
     <div>
-      <LeagueHeader lid={league.lid} title={league.name}></LeagueHeader>
-      <GoalLeadership display={true}></GoalLeadership>
+      <LeagueHeader lid={scorers.lid} title={scorers.name}></LeagueHeader>
+      <GoalLeadership scorers={scorers.scorers}></GoalLeadership>
     </div>
   );
 }
