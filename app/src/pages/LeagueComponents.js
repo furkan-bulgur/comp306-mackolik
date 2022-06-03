@@ -1,44 +1,105 @@
-import React from 'react';
-import {Link} from "react-router-dom"
+import React from "react";
+import { Link } from "react-router-dom";
 
 function LeagueHeader(props) {
-    return (
+  return (
     <div className="header">
-        <h1>{props.title}</h1>
-        <ul>
-            <li>
-                <Link to={{
-                    pathname: `/league/standings/${props.lid}`,
-                }}>
-                    Standings
-                </Link>
-            </li>
-        </ul>
+      <h1>{props.title}</h1>
+      <ul>
+        <li>
+          <Link
+            to={{
+              pathname: `/league/standings/${props.lid}`,
+            }}
+          >
+            Standings
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={{
+              pathname: `/league/goalleadership/${props.lid}`,
+            }}
+          >
+            Goal Leadership
+          </Link>
+        </li>
+      </ul>
     </div>
-    );
+  );
 }
 
 function Standings(props) {
-    if(props.standings){
-        return (
-            <div className='league_table'>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Team</th>
-                            <th>Played</th>
-                            <th>Won</th>
-                            <th>Draw</th>
-                            <th>Loss</th>
-                            <th>Goals For</th>
-                            <th>Goals Against</th>
-                            <th>Goal Diff</th>
-                            <th>Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {props.standings.map((standing) => (
+  if (props.standings) {
+    return (
+      <div className="league_table">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Team</th>
+              <th>Played</th>
+              <th>Won</th>
+              <th>Draw</th>
+              <th>Loss</th>
+              <th>Goals For</th>
+              <th>Goals Against</th>
+              <th>Goal Diff</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {props.standings.map((standing) => (
+              <tr key={standing.tid}>
+                {Object.values(standing)
+                  .slice(1)
+                  .map((val, index) => {
+                    if (index === 1) {
+                      return (
+                        <td>
+                          <Link
+                            to={{
+                              pathname: `/team/squad/${standing.tid}`,
+                            }}
+                          >
+                            {val}
+                          </Link>
+                        </td>
+                      );
+                    } else {
+                      return <td>{val}</td>;
+                    }
+                  })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+}
+
+function GoalLeadership(props) {
+  if (props.display) {
+    return (
+      <div className="league_table">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player Name</th>
+              <th>Played</th>
+              <th>First 11</th>
+              <th>Minutes</th>
+              <th>Penalties</th>
+              <th>Goal</th>
+              <th>Goal Per Match</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* {props.standings.map((standing) => (
                             
                                 <tr key={standing.tid}>
                                         {Object.values(standing).slice(1).map((val, index) => {
@@ -59,18 +120,14 @@ function Standings(props) {
                                         }
                                 </tr>
                             
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            );
-    }
-    else{
-        return(<div></div>)
-    }
+                        ))} */}
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
 }
 
-export {
-    LeagueHeader,
-    Standings
-}
+export { LeagueHeader, Standings, GoalLeadership };
