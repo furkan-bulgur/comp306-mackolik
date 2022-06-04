@@ -83,6 +83,12 @@ def get_match_statistics_away():
     mid = request.args.get("mid", default=None)
     return away_statistics(mid)
 
+# takım playerlerı /teams/players?tid=65
+@app.route('/teams/players', methods=['GET'])
+def get_team_players():
+    tid = request.args.get("tid", default=None)
+    return team_players(tid)
+
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
     return team_matches(165)
@@ -237,6 +243,39 @@ def away_statistics(mid):
     cursor.execute(query)
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"statistics\": " + statistics_json + "}]"
+    return final_json
+
+def team_players(tid):
+    cursor = conn.cursor()
+    query = f"""SELECT PI.pid, number, PI.position, P.nation, concat(P.fname," ", P.lname) as name,(2022 - year(P.birthdate)) as age, count(*) as played_match, sum(PI.mins_played) as mins_played, sum(PI.total_goals) as goals, sum(PI.assists) as assists, sum(PI.yellow_cards) as yellow_cards, sum(PI.red_cards) as red_cards, sum(PI.total_shots) as total_shots, sum(PI.on_shots) as on_shots, sum(PI.saves) as saves, sum(PI.conceded_goals) as conceded_goals, TRUNCATE(avg(PI.rating),2) as avg_rating
+    FROM player as P, plays_in as PI, team as T, league as L
+    WHERE PI.pid = P.pid and P.tid = T.tid and T.tid={tid} and T.lid = L.lid
+    GROUP BY PI.pid
+    ORDER BY number"""
+    cursor.execute(query)
+    statistics_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"players\": " + statistics_json + "}]"
+    return final_json
+
+def team_fixtures(tid):
+    cursor = conn.cursor()
+    query = f"""SELECT P.mid, P.home_tid, P.away_tid, M.week, M.date, T1.name as home_team, concat(M.home_goals," - ", M.away_goals) as score, T2.Name as away_team, M.referee
+    FROM plays as P, matches as M, team as T1, team as T2 
+    WHERE P.mid = M.mid and (P.home_tid ={tid} or P.away_tid = {tid}) and T1.tid = P.home_tid and T2.tid = P.away_tid 
+    ORDER BY M.week asc"""
+    cursor.execute(query)
+    statistics_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"fixtures\": " + statistics_json + "}]"
     return final_json
 
 def team_matches(tid):
