@@ -1,27 +1,27 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #03045e;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-.header{
+.header {
   text-align: center;
   font-size: 1.2em;
   border: 1px solid #023e8a;
   background-color: #ade8f4;
 }
-.header h1{
+.header h1 {
   margin-bottom: 1em;
 }
-.header li{
+.header li {
   display: inline-block;
   margin: auto 1.5em;
   border: 0.5px solid #023e8a;
@@ -30,23 +30,24 @@ code {
   width: 10em;
 }
 
-.header li:hover{
+.header li:hover {
   background-color: #48cae4;
 }
 
-.header a{
+.header a {
   text-decoration: none;
 }
 
-.header a:visited, .header a:link{
+.header a:visited,
+.header a:link {
   color: #03045e;
 }
 
-.league_table{
+.league_table {
   text-align: center;
 }
 
-.league_table table{
+.league_table table {
   margin-top: 2em;
   margin-bottom: 3em;
   margin-left: 2em;
@@ -55,16 +56,23 @@ code {
   border: 1px solid #03045e;
   border-collapse: collapse;
 }
-.league_table td, th{
+.league_table td,
+th {
   padding: 0.5em;
   text-align: center;
   border: 1px solid #03045e;
 }
 
-.league_table a, a:visited, a:link{
+.league_table a,
+a:visited,
+a:link {
   text-decoration: none;
   color: #03045e;
 }
-.league_table a:hover{
+.league_table a:hover {
+  color: #48cae4;
+}
+
+.navigatable:hover {
   color: #48cae4;
 }
