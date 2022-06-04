@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import LeagueAssistLeadership from './pages/LeagueAssistLeadership';
 import LeagueMatches from './pages/LeagueMatches';
+import LeagueDisciplineTable from './pages/LeagueDisciplineTable';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/league/goalleadership/:lid" element={<LeagueGoalLeadership />} />
         <Route path="/league/assistleadership/:lid" element={<LeagueAssistLeadership />} />
         <Route path="/league/matches/:lid/:week" element={<LeagueMatches />} />
+        <Route path="/league/disciplinetable/:lid" element={<LeagueDisciplineTable />} />
         <Route path="/team/squad/:tid" element={<TeamSquad />} />
       </Routes>
     </Router>

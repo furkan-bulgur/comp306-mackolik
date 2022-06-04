@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Matches(props) {
+    const {week} = useParams();
+  const navigate = useNavigate();
     if (props.matches && props.weeks) {
       const weekArray = [...Array(props.weeks + 1).keys()].slice(1);
       return (
@@ -34,6 +36,7 @@ function Matches(props) {
           </div>
           {/* matches */}
           <div className="league_table">
+            <p id="week_num">Week: {week}</p>
             <table>
               <thead>
                 <tr>
@@ -54,26 +57,15 @@ function Matches(props) {
                         // return <td>{val}</td>;
                         if (index === 1) {
                           return (
-                            <td>
-                              <Link
-                                to={{
-                                  pathname: `/team/squad/${match.home_tid}`,
-                                }}
-                              >
-                                {val}
-                              </Link>
+                            <td onClick={() => navigate(`/team/squad/${match.home_tid}`)} className='navigatable'>
+                              {val}
                             </td>
                           );
-                        } else if (index === 4) {
+                        } 
+                        else if (index === 4) {
                             return (
-                              <td>
-                                <Link
-                                  to={{
-                                    pathname: `/team/squad/${match.away_tid}`,
-                                  }}
-                                >
+                              <td onClick={() => navigate(`/team/squad/${match.away_tid}`)} className='navigatable'>
                                   {val}
-                                </Link>
                               </td>
                             );
                         }

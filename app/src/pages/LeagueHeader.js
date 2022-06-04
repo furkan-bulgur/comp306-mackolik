@@ -49,6 +49,15 @@ function LeagueHeader(props) {
             Assist Leadership
           </Link>
         </li>
+        <li>
+          <Link
+            to={{
+              pathname: `/league/disciplinetable/${props.lid}`,
+            }}
+          >
+            Discipline Table
+          </Link>
+        </li>
       </ul>
     </div>
   );
