@@ -96,23 +96,29 @@ def get_team_fixtures():
     return team_fixtures(tid)
 
 
-# takımın gol tablosu team/scorers?lid=12
+# takımın gol tablosu team/scorers?tid=12
 @app.route('/teams/scorers', methods=['GET'])
 def get_team_scorers():
     tid = request.args.get("tid", default=None)
     return team_scorers(tid)
 
-# takımın asisst tablosu teams/assisters?lid=12
+# takımın asisst tablosu teams/assisters?tid=12
 @app.route('/teams/assisters', methods=['GET'])
 def get_team_assisters():
     tid = request.args.get("tid", default=None)
     return team_assisters(tid)
 
-# disiplin tablosu ilk 10 leagues/cards?lid=12
+#  takım disiplin tablosu  teams/cards?tid=12
 @app.route('/teams/cards', methods=['GET'])
 def get_team_cards():
     tid = request.args.get("tid", default=None)
     return team_cards(tid)
+
+#  takım disiplin tablosu  teams/cards?pid=12
+@app.route('/players', methods=['GET'])
+def get_player():
+    pid = request.args.get("pid", default=None)
+    return player(pid)
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
@@ -278,13 +284,13 @@ def team_players(tid):
     GROUP BY PI.pid
     ORDER BY number"""
     cursor.execute(query)
-    statistics_json = convert_to_json(cursor)
+    players_json = convert_to_json(cursor)
     query = f"""SELECT L.lid, L.name,T.tid, T.name as team
     FROM team as T, league as L
     WHERE T.lid = L.lid and T.tid={tid};"""
     cursor.execute(query)
     league_json = convert_to_json(cursor)
-    final_json = league_json[:-2] + ", \"players\": " + statistics_json + "}]"
+    final_json = league_json[:-2] + ", \"players\": " + players_json + "}]"
     return final_json
 
 def team_fixtures(tid):
@@ -294,13 +300,13 @@ def team_fixtures(tid):
     WHERE P.mid = M.mid and (P.home_tid ={tid} or P.away_tid = {tid}) and T1.tid = P.home_tid and T2.tid = P.away_tid 
     ORDER BY M.week asc"""
     cursor.execute(query)
-    statistics_json = convert_to_json(cursor)
+    fixtures_json = convert_to_json(cursor)
     query = f"""SELECT L.lid, L.name,T.tid, T.name as team
     FROM team as T, league as L
     WHERE T.lid = L.lid and T.tid={tid};"""
     cursor.execute(query)
     league_json = convert_to_json(cursor)
-    final_json = league_json[:-2] + ", \"fixtures\": " + statistics_json + "}]"
+    final_json = league_json[:-2] + ", \"fixtures\": " + fixtures_json + "}]"
     return final_json
 
 def team_scorers(tid):
@@ -362,6 +368,20 @@ def team_cards(tid):
     cursor.execute(query)
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"cards\": " + cards_json + "}]"
+    return final_json
+
+def player(pid):
+    cursor = conn.cursor()
+    query = f"""SELECT * FROM player
+    WHERE pid={pid};"""
+    cursor.execute(query)
+    player_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L, player as P
+    WHERE T.lid = L.lid and T.tid=P.tid and P.pid = {pid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"info\": " + player_json + "}]"
     return final_json
 
 def team_matches(tid):
