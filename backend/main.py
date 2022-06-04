@@ -214,7 +214,7 @@ def home_statistics(mid):
     WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T1.tid and PL.home_tid = T1.tid and M.mid={mid};"""
     cursor.execute(query)
     statistics_json = convert_to_json(cursor)
-    query = f"""SELECT L.lid, L.name
+    query = f"""SELECT L.lid, L.name, T1.name as team, M.home_goals
     FROM matches as M, team as T1, plays as PL, league as L
     WHERE M.mid = PL.mid and PL.home_tid = T1.tid and T1.lid = L.lid and M.mid={mid}"""
     cursor.execute(query)
@@ -229,7 +229,7 @@ def away_statistics(mid):
     WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T2.tid and  PL.away_tid = T2.tid and M.mid={mid};"""
     cursor.execute(query)
     statistics_json = convert_to_json(cursor)
-    query = f"""SELECT L.lid, L.name
+    query = f"""SELECT L.lid, L.name , T2.name as team, M.away_goals
     FROM matches as M, team as T2, plays as PL, league as L
     WHERE M.mid = PL.mid and PL.home_tid = T2.tid and T2.lid = L.lid and M.mid={mid}"""
     cursor.execute(query)
