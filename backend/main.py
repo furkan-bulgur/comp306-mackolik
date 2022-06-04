@@ -114,7 +114,7 @@ def get_team_cards():
     tid = request.args.get("tid", default=None)
     return team_cards(tid)
 
-#  takım disiplin tablosu  teams/cards?pid=12
+#  player info  /players?pid=644
 @app.route('/players', methods=['GET'])
 def get_player():
     pid = request.args.get("pid", default=None)
@@ -312,7 +312,7 @@ def team_fixtures(tid):
 def team_scorers(tid):
     cursor = conn.cursor()
     query = f"""SELECT Pl.pid, T.name as Team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.total_goals)/Count(*) as goals_per_match
-    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50 
     group by P.pid
     order by goals DESC;"""
@@ -329,7 +329,7 @@ def team_scorers(tid):
 def team_assisters(tid):
     cursor = conn.cursor()
     query = f"""SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.assists)/Count(*) as assists_per_match
-    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50 
     group by P.pid
     order by assists DESC;"""
@@ -372,7 +372,8 @@ def team_cards(tid):
 
 def player(pid):
     cursor = conn.cursor()
-    query = f"""SELECT * FROM player
+    query = f"""SELECT pid, concat(fname," ", lname) as name, nation, height, weight, birthdate, year(now()) - year(birthdate) as age
+    FROM player 
     WHERE pid={pid};"""
     cursor.execute(query)
     player_json = convert_to_json(cursor)

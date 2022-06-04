@@ -38,9 +38,9 @@ function Squad(props) {
                       return (
                         <td
                           className="navigatable"
-                        //   onClick={() => {
-                        //     navigate(`/team/squad/${standing.tid}`);
-                        //   }}
+                          onClick={() => {
+                            navigate(`/player/${player.pid}`);
+                          }}
                         >
                           {val}
                         </td>

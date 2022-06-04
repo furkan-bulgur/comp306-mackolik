@@ -1,29 +1,28 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function AssistLeadership(props) {
+function GoalLeadership(props) {
   const navigate = useNavigate();
-  if (props.assisters) {
+  if (props.scorers) {
     return (
       <div className="league_table">
         <table>
           <thead>
             <tr>
               <th>Rank</th>
-              <th>Team</th>
               <th>Player Name</th>
               <th>Played Match</th>
               <th>Played Minutes</th>
               <th>Goals</th>
               <th>Assists</th>
-              <th>Assists Per Match</th>
+              <th>Goal Per Match</th>
             </tr>
           </thead>
           <tbody>
-            {props.assisters.map((assister, index) => (
-              <tr key={assister.pid}>
+            {props.scorers.map((scorer, index) => (
+              <tr key={scorer.pid}>
                 <td>{index + 1}</td>
-                {Object.values(assister)
+                {Object.values(scorer)
                   .slice(2)
                   .map((val, inner) => {
                     if (inner === 0) {
@@ -31,18 +30,7 @@ function AssistLeadership(props) {
                         <td
                           className="navigatable"
                           onClick={() => {
-                            navigate(`/team/squad/${assister.tid}`);
-                          }}
-                        >
-                          {val}
-                        </td>
-                      );
-                    } else if (inner === 1) {
-                      return (
-                        <td
-                          className="navigatable"
-                          onClick={() => {
-                            navigate(`/player/${assister.pid}`);
+                            navigate(`/player/${scorer.pid}`);
                           }}
                         >
                           {val}
@@ -63,4 +51,4 @@ function AssistLeadership(props) {
   }
 }
 
-export default AssistLeadership;
+export default GoalLeadership;

@@ -37,6 +37,17 @@ function GoalLeadership(props) {
                           {val}
                         </td>
                       );
+                    } else if (inner === 1) {
+                      return (
+                        <td
+                          className="navigatable"
+                          onClick={() => {
+                            navigate(`/player/${scorer.pid}`);
+                          }}
+                        >
+                          {val}
+                        </td>
+                      );
                     } else {
                       return <td>{val}</td>;
                     }

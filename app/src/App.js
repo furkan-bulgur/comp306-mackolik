@@ -10,6 +10,10 @@ import LeagueDisciplineTable from "./pages/League/LeagueDisciplineTable";
 import TeamSquad from "./pages/Team/TeamSquad.js";
 import MatchStatistics from "./pages/Match/MatchStatistics";
 import TeamFixture from "./pages/Team/TeamFixture";
+import TeamGoalLeadership from "./pages/Team/TeamGoalLeadership";
+import TeamAssistLeadership from "./pages/Team/TeamAssistLeadership";
+import TeamDisciplineTable from "./pages/Team/TeamDisciplineTable";
+import PlayerInfo from "./pages/Player/PlayerInfo";
 
 function App() {
   return (
@@ -32,15 +36,20 @@ function App() {
         />
         <Route path="/team/squad/:tid" element={<TeamSquad />} />
         <Route path="/team/fixture/:tid" element={<TeamFixture />} />
-        {/* <Route
-          path="/team/goalleadership/:lid"
-          element={<LeagueGoalLeadership />}
+        <Route
+          path="/team/goalleadership/:tid"
+          element={<TeamGoalLeadership />}
         />
         <Route
-          path="/team/assistleadership/:lid"
-          element={<LeagueAssistLeadership />}
-        /> */}
+          path="/team/assistleadership/:tid"
+          element={<TeamAssistLeadership />}
+        />
+        <Route
+          path="/team/disciplinetable/:tid"
+          element={<TeamDisciplineTable />}
+        />
         <Route path="/match/:mid" element={<MatchStatistics />} />
+        <Route path="/player/:pid" element={<PlayerInfo />} />
       </Routes>
     </Router>
   );

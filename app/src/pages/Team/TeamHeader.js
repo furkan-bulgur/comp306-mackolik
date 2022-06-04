@@ -49,7 +49,7 @@ function TeamHeader(props) {
             Assist Leadership
           </Link>
         </li>
-        {/* <li>
+        <li>
           <Link
             to={{
               pathname: `/team/disciplinetable/${props.tid}`,
@@ -57,7 +57,7 @@ function TeamHeader(props) {
           >
             Discipline Table
           </Link>
-        </li> */}
+        </li>
       </ul>
     </div>
   );

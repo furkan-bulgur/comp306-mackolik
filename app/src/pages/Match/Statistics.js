@@ -1,7 +1,8 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Statistics(props) {
+  const navigate = useNavigate();
   if (props.home && props.away) {
     return (
       // <div>Statistics page</div>
@@ -27,26 +28,24 @@ function Statistics(props) {
           </thead>
           <tbody>
             <tr>{props.home[0].team}</tr>
-            {props.home.map((match) => (
-              <tr key={match.mid}>
-                {Object.values(match)
+            {props.home.map((player) => (
+              <tr key={player.mid}>
+                {Object.values(player)
                   .slice(4)
                   .map((val, index) => {
-                    return <td>{val}</td>;
-                    // if (index === 1) {
-                    //   return (
-                    //     <td
-                    //       onClick={() =>
-                    //         navigate(`/team/squad/${match.home_tid}`)
-                    //       }
-                    //       className="navigatable"
-                    //     >
-                    //       {val}
-                    //     </td>
-                    //   );
-                    // } else {
-                    //   return <td>{val}</td>;
-                    // }
+                    // return <td>{val}</td>;
+                    if (index === 1) {
+                      return (
+                        <td
+                          onClick={() => navigate(`/player/${player.pid}`)}
+                          className="navigatable"
+                        >
+                          {val}
+                        </td>
+                      );
+                    } else {
+                      return <td>{val}</td>;
+                    }
                   })}
               </tr>
             ))}

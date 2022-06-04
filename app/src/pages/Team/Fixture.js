@@ -1,13 +1,11 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Fixture(props) {
-//   const { week } = useParams();
   const navigate = useNavigate();
   if (props.fixtures) {
     return (
       <div>
-        {/* matches */}
         <div className="league_table">
           <table>
             <thead>

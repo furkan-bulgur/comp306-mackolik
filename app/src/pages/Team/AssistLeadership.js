@@ -10,7 +10,6 @@ function AssistLeadership(props) {
           <thead>
             <tr>
               <th>Rank</th>
-              <th>Team</th>
               <th>Player Name</th>
               <th>Played Match</th>
               <th>Played Minutes</th>
@@ -27,17 +26,6 @@ function AssistLeadership(props) {
                   .slice(2)
                   .map((val, inner) => {
                     if (inner === 0) {
-                      return (
-                        <td
-                          className="navigatable"
-                          onClick={() => {
-                            navigate(`/team/squad/${assister.tid}`);
-                          }}
-                        >
-                          {val}
-                        </td>
-                      );
-                    } else if (inner === 1) {
                       return (
                         <td
                           className="navigatable"
