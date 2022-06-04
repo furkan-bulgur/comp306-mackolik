@@ -50,7 +50,7 @@ def get_league_fixtures():
 # takım idyi verince select all döndüren bi qurery teams?tid=123 
 @app.route('/teams', methods=['GET'])
 def get_team_info():
-    tid = request.args.get("lid", default=None)
+    tid = request.args.get("tid", default=None)
     return team_info(tid)
 
 # gol krallığı ilk 10 leagues/scorers?lid=12
@@ -88,6 +88,31 @@ def get_match_statistics_away():
 def get_team_players():
     tid = request.args.get("tid", default=None)
     return team_players(tid)
+
+# takım fixtures /teams/fixtures?tid=65
+@app.route('/teams/fixtures', methods=['GET'])
+def get_team_fixtures():
+    tid = request.args.get("tid", default=None)
+    return team_fixtures(tid)
+
+
+# gol krallığı ilk 10 leagues/scorers?lid=12
+@app.route('/teams/scorers', methods=['GET'])
+def get_teams_scorers():
+    lid = request.args.get("lid", default=None)
+    return team_scorers(lid)
+
+# asist krallığı ilk 10 leagues/assisters?lid=12
+@app.route('/teams/assisters', methods=['GET'])
+def get_teams_assisters():
+    lid = request.args.get("lid", default=None)
+    return team_assisters(lid)
+
+# disiplin tablosu ilk 10 leagues/cards?lid=12
+@app.route('/teams/cards', methods=['GET'])
+def get_league_cards():
+    lid = request.args.get("lid", default=None)
+    return league_cards(lid)
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
