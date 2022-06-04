@@ -27,7 +27,7 @@ function Fixture(props) {
                     .slice(3)
                     .map((val, index) => {
                       // return <td>{val}</td>;
-                      if (index === 1) {
+                      if (index === 2) {
                         return (
                           <td
                             onClick={() =>
@@ -38,7 +38,7 @@ function Fixture(props) {
                             {val}
                           </td>
                         );
-                      } else if (index === 2) {
+                      } else if (index === 3) {
                         return (
                           <td
                             onClick={() => navigate(`/match/${match.mid}`)}
@@ -47,7 +47,7 @@ function Fixture(props) {
                             {val}
                           </td>
                         );
-                      } else if (index === 3) {
+                      } else if (index === 4) {
                         return (
                           <td
                             onClick={() =>

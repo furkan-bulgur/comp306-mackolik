@@ -32,6 +32,14 @@ function App() {
         />
         <Route path="/team/squad/:tid" element={<TeamSquad />} />
         <Route path="/team/fixture/:tid" element={<TeamFixture />} />
+        {/* <Route
+          path="/team/goalleadership/:lid"
+          element={<LeagueGoalLeadership />}
+        />
+        <Route
+          path="/team/assistleadership/:lid"
+          element={<LeagueAssistLeadership />}
+        /> */}
         <Route path="/match/:mid" element={<MatchStatistics />} />
       </Routes>
     </Router>
