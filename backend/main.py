@@ -110,7 +110,7 @@ def get_teams_assisters():
 
 # disiplin tablosu ilk 10 leagues/cards?lid=12
 @app.route('/teams/cards', methods=['GET'])
-def get_league_cards():
+def get_team_cards():
     lid = request.args.get("lid", default=None)
     return league_cards(lid)
 

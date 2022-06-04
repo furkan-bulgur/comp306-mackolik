@@ -37,10 +37,7 @@ function MatchStatistics(props) {
 
   const homeResponse = homeData[0];
   const awayResponse = awayData[0];
-  // console.log(JSON.stringify(homeResponse));
-  console.log(JSON.stringify(awayResponse));
-  // console.log("week:" + JSON.stringify(weekResponse));
-
+  
   return (
     <div>
       <MatchHeader title={homeResponse.name} homeResponse={homeResponse} awayResponse={awayResponse}></MatchHeader>

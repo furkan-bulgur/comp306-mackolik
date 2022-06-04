@@ -9,6 +9,7 @@ import LeagueMatches from "./pages/League/LeagueMatches";
 import LeagueDisciplineTable from "./pages/League/LeagueDisciplineTable";
 import TeamSquad from "./pages/Team/TeamSquad.js";
 import MatchStatistics from "./pages/Match/MatchStatistics";
+import TeamFixture from "./pages/Team/TeamFixture";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           element={<LeagueDisciplineTable />}
         />
         <Route path="/team/squad/:tid" element={<TeamSquad />} />
+        <Route path="/team/fixture/:tid" element={<TeamFixture />} />
         <Route path="/match/:mid" element={<MatchStatistics />} />
       </Routes>
     </Router>

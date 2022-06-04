@@ -22,6 +22,15 @@ function TeamHeader(props) {
             Squad
           </Link>
         </li>
+        <li>
+          <Link
+            to={{
+              pathname: `/team/fixture/${props.tid}`,
+            }}
+          >
+            Fixture
+          </Link>
+        </li>
       </ul>
     </div>
   );
