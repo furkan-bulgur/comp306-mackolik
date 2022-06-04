@@ -61,6 +61,13 @@ function Matches(props) {
                             </td>
                           );
                         } 
+                        else if (index === 2) {
+                            return (
+                              <td onClick={() => navigate(`/match/${match.mid}`)} className='navigatable'>
+                                  {val}
+                              </td>
+                            );
+                        }
                         else if (index === 3) {
                             return (
                               <td onClick={() => navigate(`/team/squad/${match.away_tid}`)} className='navigatable'>
