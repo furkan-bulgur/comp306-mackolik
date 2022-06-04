@@ -96,23 +96,23 @@ def get_team_fixtures():
     return team_fixtures(tid)
 
 
-# gol krallığı ilk 10 leagues/scorers?lid=12
+# takımın gol tablosu team/scorers?lid=12
 @app.route('/teams/scorers', methods=['GET'])
-def get_teams_scorers():
-    lid = request.args.get("lid", default=None)
-    return team_scorers(lid)
+def get_team_scorers():
+    tid = request.args.get("tid", default=None)
+    return team_scorers(tid)
 
-# asist krallığı ilk 10 leagues/assisters?lid=12
+# takımın asisst tablosu teams/assisters?lid=12
 @app.route('/teams/assisters', methods=['GET'])
-def get_teams_assisters():
-    lid = request.args.get("lid", default=None)
-    return team_assisters(lid)
+def get_team_assisters():
+    tid = request.args.get("tid", default=None)
+    return team_assisters(tid)
 
 # disiplin tablosu ilk 10 leagues/cards?lid=12
 @app.route('/teams/cards', methods=['GET'])
 def get_team_cards():
-    lid = request.args.get("lid", default=None)
-    return league_cards(lid)
+    tid = request.args.get("tid", default=None)
+    return team_cards(tid)
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
@@ -301,6 +301,67 @@ def team_fixtures(tid):
     cursor.execute(query)
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"fixtures\": " + statistics_json + "}]"
+    return final_json
+
+def team_scorers(tid):
+    cursor = conn.cursor()
+    query = f"""SELECT Pl.pid, T.name as Team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.total_goals)/Count(*) as goals_per_match
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50 
+    group by P.pid
+    order by goals DESC;"""
+    cursor.execute(query)
+    scorers_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"scorers\": " + scorers_json + "}]"
+    return final_json
+
+def team_assisters(tid):
+    cursor = conn.cursor()
+    query = f"""SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.total_goals) as goals, Sum(P.assists) as assists , Sum(P.assists)/Count(*) as assists_per_match
+    FROM 306db.plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50 
+    group by P.pid
+    order by assists DESC;"""
+    cursor.execute(query)
+    assisters_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"assisters\": " + assisters_json + "}]"
+    return final_json
+
+def team_cards(tid):
+    cursor = conn.cursor()
+    cursor.execute("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
+    query = f"""SELECT red.pid, red.team, red.name, red.played_match, red.played_min, red.red_cards, yellow.yellow_cards, red_cards+yellow.yellow_cards as total_cards
+    FROM
+    (SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.red_cards) as red_cards
+    FROM plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50
+    group by P.pid
+    order by red_cards DESC) as red,
+    (SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.yellow_cards) as yellow_cards
+    FROM plays_in as P , player as Pl, league as L, team as T
+    WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and T.tid = 50
+    group by P.pid
+    order by red_cards DESC) as yellow
+    WHERE red.pid = yellow.pid
+    order by total_cards desc;"""
+    cursor.execute(query)
+    cards_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"cards\": " + cards_json + "}]"
     return final_json
 
 def team_matches(tid):
