@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { LeagueHeader, AssistLeadership } from "./LeagueComponents.js";
+import LeagueHeader from "./LeagueHeader.js";
+import AssistLeadership from "./AssistLeadership.js";
 
 function LeagueAssistLeadership(props) {
   const { lid } = useParams();

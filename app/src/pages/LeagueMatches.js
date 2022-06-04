@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { LeagueHeader, Matches } from "./LeagueComponents.js";
+import LeagueHeader from "./LeagueHeader.js";
+import Matches from "./Matches.js";
 
 function LeagueMatches(props) {
   const { lid, week } = useParams();
