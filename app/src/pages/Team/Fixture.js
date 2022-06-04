@@ -12,6 +12,7 @@ function Fixture(props) {
           <table>
             <thead>
               <tr>
+                <th>Week</th>
                 <th>Date</th>
                 <th>Home</th>
                 <th>Final Score</th>
@@ -23,7 +24,7 @@ function Fixture(props) {
               {props.fixtures.map((match) => (
                 <tr key={match.mid}>
                   {Object.values(match)
-                    .slice(4)
+                    .slice(3)
                     .map((val, index) => {
                       // return <td>{val}</td>;
                       if (index === 1) {
