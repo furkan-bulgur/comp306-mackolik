@@ -171,14 +171,15 @@ def league_assisters(lid):
 
 def league_cards(lid):
     cursor = conn.cursor()
-    query = f"""SELECT red.pid, red.team, red.name, red.played_match, red.played_min, red.red_cards, yellow.yellow_cards, red_cards+yellow.yellow_cards as total_cards
+    cursor.execute("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
+    query = f"""SELECT red.pid, red.tid, red.team, red.name, red.played_match, red.played_min, red.red_cards, yellow.yellow_cards, red_cards+yellow.yellow_cards as total_cards
     FROM
-    (SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.red_cards) as red_cards
+    (SELECT Pl.pid, T.tid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.red_cards) as red_cards
     FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}
     group by P.pid
     order by red_cards DESC) as red,
-    (SELECT Pl.pid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.yellow_cards) as yellow_cards
+    (SELECT Pl.pid, T.tid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.yellow_cards) as yellow_cards
     FROM plays_in as P , player as Pl, league as L, team as T
     WHERE P.pid = Pl.pid and Pl.tid = T.tid and T.lid= L.lid and L.lid = {lid}
     group by P.pid
