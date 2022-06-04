@@ -42,8 +42,7 @@ function Matches(props) {
                 <tr>
                   <th>Date</th>
                   <th>Home</th>
-                  <th>Home Score</th>
-                  <th>Away Score</th>
+                  <th>Final Score</th>
                   <th>Away Team</th>
                   <th>Referee</th>
                 </tr>
@@ -62,7 +61,7 @@ function Matches(props) {
                             </td>
                           );
                         } 
-                        else if (index === 4) {
+                        else if (index === 3) {
                             return (
                               <td onClick={() => navigate(`/team/squad/${match.away_tid}`)} className='navigatable'>
                                   {val}
