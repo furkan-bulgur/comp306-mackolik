@@ -211,7 +211,8 @@ def home_statistics(mid):
     cursor = conn.cursor()
     query = f"""SELECT T1.tid, T1.name as team, PI.mid, PI.pid, PI.number, concat(P.fname," ", P.lname) as name,  PI.position, PI.mins_played, PI.yellow_cards, PI.red_cards, PI.passes, PI.total_shots, PI.on_shots, PI.saves, PI.conceded_goals, PI.total_goals, PI.assists, PI.rating
     FROM matches as M, team as T1, plays as PL, player as P, plays_in as PI
-    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T1.tid and PL.home_tid = T1.tid and M.mid={mid};"""
+    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T1.tid and PL.home_tid = T1.tid and M.mid={mid}
+    ORDER BY mins_played DESC;"""
     cursor.execute(query)
     statistics_json = convert_to_json(cursor)
     query = f"""SELECT L.lid, L.name, T1.name as team, M.home_goals
@@ -226,12 +227,13 @@ def away_statistics(mid):
     cursor = conn.cursor()
     query = f"""SELECT T2.tid, T2.name as team, PI.mid, PI.pid, PI.number, concat(P.fname," ", P.lname) as name,  PI.position, PI.mins_played, PI.yellow_cards, PI.red_cards, PI.passes, PI.total_shots, PI.on_shots, PI.saves, PI.conceded_goals, PI.total_goals, PI.assists, PI.rating
     FROM matches as M, team as T2, plays as PL, player as P, plays_in as PI
-    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T2.tid and  PL.away_tid = T2.tid and M.mid={mid};"""
+    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T2.tid and  PL.away_tid = T2.tid and M.mid={mid}
+    ORDER BY mins_played DESC;"""
     cursor.execute(query)
     statistics_json = convert_to_json(cursor)
     query = f"""SELECT L.lid, L.name , T2.name as team, M.away_goals
     FROM matches as M, team as T2, plays as PL, league as L
-    WHERE M.mid = PL.mid and PL.home_tid = T2.tid and T2.lid = L.lid and M.mid={mid}"""
+    WHERE M.mid = PL.mid and PL.away_tid = T2.tid and T2.lid = L.lid and M.mid={mid}"""
     cursor.execute(query)
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"statistics\": " + statistics_json + "}]"

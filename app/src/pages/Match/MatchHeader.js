@@ -12,6 +12,11 @@ function MatchHeader(props) {
         Home
       </Link>
       <h1>{props.title}</h1>
+      {props.homeResponse && props.awayResponse && (
+        <h2>
+          {props.homeResponse.team} {props.homeResponse.home_goals} - {props.awayResponse.away_goals} {props.awayResponse.team}
+        </h2>
+      )}
     </div>
   );
 }

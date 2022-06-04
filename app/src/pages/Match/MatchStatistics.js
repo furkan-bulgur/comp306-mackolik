@@ -43,8 +43,8 @@ function MatchStatistics(props) {
 
   return (
     <div>
-      <MatchHeader title={homeResponse.name}></MatchHeader>
-      <Statistics home={homeResponse} away={awayResponse}></Statistics>
+      <MatchHeader title={homeResponse.name} homeResponse={homeResponse} awayResponse={awayResponse}></MatchHeader>
+      <Statistics home={homeResponse.statistics} away={awayResponse.statistics}></Statistics>
     </div>
   );
 }
