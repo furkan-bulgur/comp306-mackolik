@@ -71,6 +71,18 @@ def get_league_cards():
     lid = request.args.get("lid", default=None)
     return league_cards(lid)
 
+# maçtaki home takım statikleri /matches/statistics/home?mid=65
+@app.route('/matches/statistics/home', methods=['GET'])
+def get_match_statistics_home():
+    mid = request.args.get("mid", default=None)
+    return home_statistics(mid)
+
+# maçtaki away takım statikleri /matches/statistics/away?mid=65
+@app.route('/matches/statistics/away', methods=['GET'])
+def get_match_statistics_away():
+    mid = request.args.get("mid", default=None)
+    return away_statistics(mid)
+
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
     return team_matches(165)
@@ -111,7 +123,7 @@ def league_weeks(lid):
 
 def league_fixtures(lid, week):
     cursor = conn.cursor()
-    query = f"""SELECT P.mid, P.home_tid, P.away_tid, M.week, M.date, T1.name as home_team, M.home_goals, M.away_goals,T2.Name as away_team, M.referee
+    query = f"""SELECT P.mid, P.home_tid, P.away_tid, M.week, M.date, T1.name as home_team, concat(M.home_goals," - ", M.away_goals) as score, T2.Name as away_team, M.referee
     FROM plays as P, matches as M, team as T1, team as T2, league as L 
     WHERE P.mid = M.mid and T1.tid = P.home_tid and T2.tid = P.away_tid and T1.lid = L.lid and L.lid = {lid}  and M.week = {week}
     ORDER BY M.date ASC;"""
@@ -192,6 +204,36 @@ def league_cards(lid):
     cursor.execute(query)
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"cards\": " + cards_json + "}]"
+    return final_json
+
+def home_statistics(mid):
+    cursor = conn.cursor()
+    query = f"""SELECT T1.tid, T1.name as team, PI.mid, PI.pid, concat(P.fname," ", P.lname) as name, PI.yellow_cards, PI.red_cards, PI.passes, PI.total_shots, PI.on_shots, PI.saves, PI.assists, PI.conceded_goals, PI.total_goals, PI.number, PI.rating, PI.mins_played, PI.position
+    FROM matches as M, team as T1, plays as PL, player as P, plays_in as PI
+    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T1.tid and PL.home_tid = T1.tid and M.mid={mid};"""
+    cursor.execute(query)
+    statistics_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name
+    FROM matches as M, team as T1, plays as PL, league as L
+    WHERE M.mid = PL.mid and PL.home_tid = T1.tid and T1.lid = L.lid and M.mid={mid}"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"statistics\": " + statistics_json + "}]"
+    return final_json
+
+def away_statistics(mid):
+    cursor = conn.cursor()
+    query = f"""SELECT T2.tid, T2.name as team, PI.mid, PI.pid, concat(P.fname," ", P.lname) as name, PI.yellow_cards, PI.red_cards, PI.passes, PI.total_shots, PI.on_shots, PI.saves, PI.assists, PI.conceded_goals, PI.total_goals, PI.number, PI.rating, PI.mins_played, PI.position
+    FROM matches as M, team as T2, plays as PL, player as P, plays_in as PI
+    WHERE M.mid = PL.mid and PI.mid = M.mid and PI.pid = P.pid and P.tid= T2.tid and  PL.away_tid = T2.tid and M.mid={mid};"""
+    cursor.execute(query)
+    statistics_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name
+    FROM matches as M, team as T2, plays as PL, league as L
+    WHERE M.mid = PL.mid and PL.home_tid = T2.tid and T2.lid = L.lid and M.mid={mid}"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"statistics\": " + statistics_json + "}]"
     return final_json
 
 def team_matches(tid):
