@@ -260,6 +260,21 @@ def team_players(tid):
     final_json = league_json[:-2] + ", \"players\": " + statistics_json + "}]"
     return final_json
 
+def team_fixtures(tid):
+    cursor = conn.cursor()
+    query = f"""SELECT P.mid, P.home_tid, P.away_tid, M.week, M.date, T1.name as home_team, concat(M.home_goals," - ", M.away_goals) as score, T2.Name as away_team, M.referee
+    FROM plays as P, matches as M, team as T1, team as T2 
+    WHERE P.mid = M.mid and (P.home_tid ={tid} or P.away_tid = {tid}) and T1.tid = P.home_tid and T2.tid = P.away_tid 
+    ORDER BY M.week asc"""
+    cursor.execute(query)
+    statistics_json = convert_to_json(cursor)
+    query = f"""SELECT L.lid, L.name,T.tid, T.name as team
+    FROM team as T, league as L
+    WHERE T.lid = L.lid and T.tid={tid};"""
+    cursor.execute(query)
+    league_json = convert_to_json(cursor)
+    final_json = league_json[:-2] + ", \"fixtures\": " + statistics_json + "}]"
+    return final_json
 
 def team_matches(tid):
     cursor = conn.cursor()
