@@ -75,4 +75,5 @@ a:link {
 
 .navigatable:hover {
   color: #48cae4;
+  cursor: pointer;
 }
