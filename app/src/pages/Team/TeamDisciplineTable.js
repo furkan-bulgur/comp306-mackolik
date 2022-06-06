@@ -18,7 +18,7 @@ function TeamDisciplineTable(props) {
   const cards = data[0];
   return (
     <div>
-      <TeamHeader tid={cards.tid} title={cards.name}></TeamHeader>
+      <TeamHeader tid={cards.tid} title={cards.team}></TeamHeader>
       <DisciplineTable cards={cards.cards}></DisciplineTable>
     </div>
   );
