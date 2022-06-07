@@ -120,6 +120,10 @@ def get_player():
     pid = request.args.get("pid", default=None)
     return player(pid)
 
+@app.route('/funfacts', methods=['GET'])
+def get_funfacts():
+    return funfacts()
+
 # İngiltere liginde en az 25 maç oynayan oyuncular arasından maç başı ortalama ratinglere göre sezonun en iyi ilk 11'i (4-4-2) formasyonunda
 #  fun fact1  /funfacts1
 @app.route('/funfacts1', methods=['GET'])
@@ -143,6 +147,12 @@ def get_funfacts3():
 @app.route('/funfacts4', methods=['GET'])
 def get_funfacts4():
     return funfacts4() 
+
+#liglerin yaş ortalaması
+#  fun fact5  /funfacts5
+@app.route('/funfacts4', methods=['GET'])
+def get_funfacts5():
+    return funfacts5() 
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
@@ -412,7 +422,7 @@ def player(pid):
 def funfacts1():
     cursor = conn.cursor()
     query = f"""
-    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%G%'
     group by p.pid
@@ -420,7 +430,7 @@ def funfacts1():
     order by avg_rating DESC
     limit 1)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%D%'
     group by p.pid
@@ -428,7 +438,7 @@ def funfacts1():
     order by avg_rating DESC
     limit 4)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%M%'
     group by p.pid
@@ -436,7 +446,7 @@ def funfacts1():
     order by avg_rating DESC
     limit 4)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%F%'
     group by p.pid
@@ -445,7 +455,8 @@ def funfacts1():
     limit 2);"""
     cursor.execute(query)
     funfacts1_json = convert_to_json(cursor)
-    return funfacts1_json
+    final_json = "{\"explanation\": \"Best line-up (in 4-4-2 format) in Premier League using average match ratings of the players. Only players with a minimum of 25 played matches are included\"" + ", \"result\": " + funfacts1_json + "}"
+    return final_json
 
 def funfacts2():
     cursor = conn.cursor()
@@ -462,7 +473,8 @@ def funfacts2():
     order by home_win_rate DESC;"""
     cursor.execute(query)
     funfacts2_json = convert_to_json(cursor)
-    return funfacts2_json
+    final_json = "{\"explanation\": \"Winning percentage of the home team in the matches directed by the referees who took part in at least 15 matches in the Premier League\"" + ", \"result\": " + funfacts2_json + "}"
+    return final_json
 
 def funfacts3():
     cursor = conn.cursor()
@@ -487,7 +499,8 @@ def funfacts3():
     group by final_table.position"""
     cursor.execute(query)
     funfacts3_json = convert_to_json(cursor)
-    return funfacts3_json
+    final_json = "{\"explanation\": \"Top scorer and total goals for every position in La Liga\"" + ", \"result\": " + funfacts3_json + "}"
+    return final_json
 
 def funfacts4():
     cursor = conn.cursor()
@@ -502,7 +515,27 @@ def funfacts4():
     ORDER BY AvgAge asc"""
     cursor.execute(query)
     funfacts4_json = convert_to_json(cursor)
-    return funfacts4_json
+    final_json = "{\"explanation\": \"The average age of players in every league in ascending order\"" + ", \"result\": " + funfacts4_json + "}"
+    return final_json
+
+def funfacts5():
+    cursor = conn.cursor()
+    query = f"""
+    SELECT *
+    FROM (SELECT l.name AS l_name, t.name AS t_name, p.fname, p.lname, round(sum(pi.rating)/count(*), 2) as avg_rating
+        FROM plays_in AS pi, player AS p, team AS t, league AS l
+        WHERE pi.pid = p.pid AND pi.is_captain = 1 AND p.tid = t.tid AND t.lid = l.lid
+        GROUP BY p.pid
+        ORDER BY avg_rating desc) AS Table1
+    GROUP BY Table1.l_name"""
+    cursor.execute(query)
+    funfacts5_json = convert_to_json(cursor)
+    final_json = "{\"explanation\": \"Team captains with best average rating from every league\"" + ", \"result\": " + funfacts5_json + "}"
+    return final_json
+
+def funfacts():
+    final_json = "[" + funfacts1() + ", " + funfacts2() + ", " + funfacts3()+ ", " + funfacts4() + ", " + funfacts5() + "]" 
+    return final_json
 
 def team_matches(tid):
     cursor = conn.cursor()
