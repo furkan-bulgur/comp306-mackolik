@@ -12,6 +12,8 @@ conn = mysql.connector.connect(user=os.environ.get("DB_USER"),
                                 password=os.environ.get("PASSWORD"),
                                 host=os.environ.get("HOST"),
                                 database=os.environ.get("DATABASE"))
+cursor = conn.cursor()
+cursor.execute("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
 
 @app.route('/')
 def landing():
@@ -254,7 +256,6 @@ def league_assisters(lid):
 
 def league_cards(lid):
     cursor = conn.cursor()
-    cursor.execute("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));")
     query = f"""SELECT red.pid, red.tid, red.team, red.name, red.played_match, red.played_min, red.red_cards, yellow.yellow_cards, red_cards+yellow.yellow_cards as total_cards
     FROM
     (SELECT Pl.pid, T.tid, T.name as team, concat(Pl.fname," ", Pl.lname) as name, Count(*) as played_match, Sum(P.mins_played) as played_min, Sum(P.red_cards) as red_cards

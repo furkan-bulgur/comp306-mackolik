@@ -43,6 +43,15 @@ code {
   color: #03045e;
 }
 
+.match-team-name{
+  margin: auto;
+  font-size: 1.5em;
+  font-style: bold;
+  text-align: center;
+  margin-top: 1em;
+
+}
+
 .league_table {
   text-align: center;
 }
@@ -81,3 +90,4 @@ a:link {
 #week_num{
   margin: auto;
 }
+
