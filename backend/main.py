@@ -423,36 +423,36 @@ def player(pid):
 def funfacts1():
     cursor = conn.cursor()
     query = f"""
-    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
+    (select concat(p.fname," ", p.lname) as Player_Name, pin.Position, t.name as Team_Name, round(avg(pin.rating), 2) as Average_Rating, count(*) as Match_Played
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%G%'
     group by p.pid
     having count(*) > 25
-    order by avg_rating DESC
+    order by Average_Rating DESC
     limit 1)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
+    (select concat(p.fname," ", p.lname) as Player_Name, pin.Position, t.name as Team_Name, round(avg(pin.rating), 2) as Average_Rating, count(*) as Match_Played
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%D%'
     group by p.pid
     having count(*) > 25
-    order by avg_rating DESC
+    order by Average_Rating DESC
     limit 4)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
+    (select concat(p.fname," ", p.lname) as Player_Name, pin.Position, t.name as Team_Name, round(avg(pin.rating), 2) as Average_Rating, count(*) as Match_Played
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%M%'
     group by p.pid
     having count(*) > 25
-    order by avg_rating DESC
+    order by Average_Rating DESC
     limit 4)
     UNION
-    (select p.pid, p.fname, p.lname, pin.position, t.name, round(avg(pin.rating), 2) as avg_rating, count(*) as played_match
+    (select concat(p.fname," ", p.lname) as Player_Name, pin.Position, t.name as Team_Name, round(avg(pin.rating), 2) as Average_Rating, count(*) as Match_Played
     from team t, player p, plays_in pin, league l
     where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%F%'
     group by p.pid
     having count(*) > 25
-    order by avg_rating DESC
+    order by Average_Rating DESC
     limit 2);"""
     cursor.execute(query)
     funfacts1_json = convert_to_json(cursor)
@@ -462,7 +462,7 @@ def funfacts1():
 def funfacts2():
     cursor = conn.cursor()
     query = f"""
-    select ref_table.referee, count(*) / ref_table.games as home_win_rate, ref_table.games
+    select ref_table.Referee, count(*) / ref_table.games as Home_Win_Rate, ref_table.Games
     from (select m.referee, count(*) as games
         from matches m, plays p, team t1, team t2, league l
         where m.mid = p.mid and t1.tid = p.home_tid and t2.tid = p.away_tid and t1.lid=l.lid and t2.lid=l.lid and l.country = 'England'
@@ -482,7 +482,7 @@ def funfacts3():
     query = f"""
     Select *
     From
-    (select p.fname, p.lname, avg_table.position as position, max_table.max_goals
+    (select concat(p.fname," ", p.lname) as Player_Name, avg_table.Position, max_table.Max_Goals
     from (select T.position, max(T.goals) max_goals
             from (select p2.pid, pin2.position as position, count(*) as played_match, sum(pin2.total_goals) as goals
                                                     from team t2, player p2, plays_in pin2
@@ -506,14 +506,14 @@ def funfacts3():
 def funfacts4():
     cursor = conn.cursor()
     query = f"""
-    SELECT L.name AS LeagueName, round(sum(A.Ave)/count(*), 2) AS AvgAge
+    SELECT L.name AS League_Name, round(sum(A.Ave)/count(*), 2) AS Average_Age
     FROM league AS L, (SELECT T.lid, T.tid, T.name, avg(datediff(curdate(), P.birthdate))/365 AS Ave
                     FROM team AS T, player AS P
                     WHERE P.tid = T.tid
                     GROUP BY T.tid) AS A
     WHERE A.lid = L.lid
     GROUP BY L.lid
-    ORDER BY AvgAge asc"""
+    ORDER BY Average_Age asc"""
     cursor.execute(query)
     funfacts4_json = convert_to_json(cursor)
     final_json = "{\"explanation\": \"The average age of players in every league in ascending order\"" + ", \"result\": " + funfacts4_json + "}"
@@ -523,12 +523,12 @@ def funfacts5():
     cursor = conn.cursor()
     query = f"""
     SELECT *
-    FROM (SELECT l.name AS l_name, t.name AS t_name, p.fname, p.lname, round(sum(pi.rating)/count(*), 2) as avg_rating
+    FROM (SELECT l.name AS League_Name, t.name AS Team_Name, concat(p.fname," ", p.lname) as Player_Name, round(sum(pi.rating)/count(*), 2) as Average_Rating
         FROM plays_in AS pi, player AS p, team AS t, league AS l
         WHERE pi.pid = p.pid AND pi.is_captain = 1 AND p.tid = t.tid AND t.lid = l.lid
         GROUP BY p.pid
-        ORDER BY avg_rating desc) AS Table1
-    GROUP BY Table1.l_name"""
+        ORDER BY Average_Rating desc) AS Table1
+    GROUP BY Table1.League_Name"""
     cursor.execute(query)
     funfacts5_json = convert_to_json(cursor)
     final_json = "{\"explanation\": \"Team captains with best average rating from every league\"" + ", \"result\": " + funfacts5_json + "}"

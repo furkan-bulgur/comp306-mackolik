@@ -12,6 +12,9 @@ code {
     monospace;
 }
 
+.root h2{
+  text-align: center;
+}
 .header {
   text-align: center;
   font-size: 1.2em;
@@ -91,3 +94,51 @@ a:link {
   margin: auto;
 }
 
+.funfacts{
+  text-align: center;
+}
+
+.funfact{
+  display: inline-block;
+  width: 70%;
+  margin: 0.5em 1em;
+  text-align: center;
+  border: 2px solid #03045e;
+  background-color: #fcede6;
+
+}
+
+.funfact p{
+  padding-bottom: 0.5em;
+  border-bottom: 1px dotted #03045e;
+  margin: 0.5em 1em;
+}
+
+.funfact-table{
+  display: inline-block;
+  border-collapse: collapse;
+  border-bottom: 1px solid #03045e;
+  margin: 1em auto;
+  
+}
+
+.funfact-table td{
+  border-left: 1px solid #03045e;
+  border-right: 1px solid #03045e;
+  padding: 0.3em;
+}
+
+.footer{
+  text-align: center;
+  font-size: 1.2em;
+  border: 1px solid #023e8a;
+  background-color: #ade8f4;
+}
+
+.footer img{
+  max-width: 5em;
+}
+.student{
+  display: inline-block;
+  margin: 1em;
+}

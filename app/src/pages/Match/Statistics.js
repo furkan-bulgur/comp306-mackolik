@@ -73,26 +73,24 @@ function Statistics(props) {
             </tr>
           </thead>
           <tbody>
-            {props.away.map((match) => (
-              <tr key={match.mid}>
-                {Object.values(match)
+            {props.away.map((player) => (
+              <tr key={player.mid}>
+                {Object.values(player)
                   .slice(4)
                   .map((val, index) => {
-                    return <td>{val}</td>;
-                    // if (index === 1) {
-                    //   return (
-                    //     <td
-                    //       onClick={() =>
-                    //         navigate(`/team/squad/${match.home_tid}`)
-                    //       }
-                    //       className="navigatable"
-                    //     >
-                    //       {val}
-                    //     </td>
-                    //   );
-                    // } else {
-                    //   return <td>{val}</td>;
-                    // }
+                    // return <td>{val}</td>;
+                    if (index === 1) {
+                      return (
+                        <td
+                          onClick={() => navigate(`/player/${player.pid}`)}
+                          className="navigatable"
+                        >
+                          {val}
+                        </td>
+                      );
+                    } else {
+                      return <td>{val}</td>;
+                    }
                   })}
               </tr>
             ))}

@@ -2,6 +2,12 @@ import React, {useState, useEffect}  from "react";
 import {
     Link
 } from "react-router-dom";
+import FunFacts from "./FunFacts";
+import gpp from "../photos/gpp.png";
+import fpp from "../photos/fpp.png";
+import bpp from "../photos/bpp.png";
+import mpp from "../photos/mpp.png";
+import tpp from "../photos/tpp.png";
 
 function Home (){
     const [data, setData] = useState([{}])
@@ -36,17 +42,23 @@ function Home (){
     }
 
     return(
-        /* <div className="header">
-            <h1>Comp 306 Term Project</h1>
-            <h5>Gülay Canbaloğlu</h5>
-            <h5>Murat Han Aydoğan</h5>
-            <h5>Furkan Bulgur</h5>
-            <h5>Burhan Özer Çavdar</h5>
-            <h5>Talha Enes Güler</h5>
-        </div> */
-        <div className="header">
-            <Leagues leagues={leagues} title="Mini Mackolik"/>
-        </div>   
+        
+        <div className="root">
+            <div className="header">
+                <Leagues leagues={leagues} title="Mini Mackolik"/>
+            </div> 
+            <h2>Fun Facts</h2>
+            <FunFacts></FunFacts>
+            <div className="footer">
+            <h3>Comp 306 Term Project</h3>
+            <div className="student"><p>Gülay Canbaloğlu </p><img src={gpp} /></div>
+            <div className="student"><p>Murat Han Aydoğan </p><img src={mpp} /></div>
+            <div className="student"><p>Furkan Bulgur </p><img src={fpp} /></div>
+            <div className="student"><p>Burhan Özer Çavdar </p><img src={bpp} /></div>
+            <div className="student"><p>Talha Enes Güler </p><img src={tpp} /></div>
+
+        </div> 
+        </div>
     );
 }
 
