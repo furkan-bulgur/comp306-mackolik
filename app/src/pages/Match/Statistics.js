@@ -7,6 +7,7 @@ function Statistics(props) {
     return (
       // <div>Statistics page</div>
       <div className="league_table">
+        <p className="match-team-name">{props.home[0].team}</p>
         <table>
           <thead>
             <tr>
@@ -27,7 +28,7 @@ function Statistics(props) {
             </tr>
           </thead>
           <tbody>
-            <tr>{props.home[0].team}</tr>
+            {/* <tr className="match-team-name">{props.home[0].team}</tr> */}
             {props.home.map((player) => (
               <tr key={player.mid}>
                 {Object.values(player)
@@ -49,7 +50,29 @@ function Statistics(props) {
                   })}
               </tr>
             ))}
-            <tr>{props.away[0].team}</tr>
+          </tbody>
+        </table>
+        <p className="match-team-name">{props.away[0].team}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Name</th>
+              <th>Position</th>
+              <th>Played Minutes</th>
+              <th>Yellow Cards</th>
+              <th>Red Cards</th>
+              <th>Passes</th>
+              <th>Total Shots</th>
+              <th>On Shots</th>
+              <th>Saves</th>
+              <th>Conceded Goals</th>
+              <th>Goals</th>
+              <th>Assists</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
             {props.away.map((match) => (
               <tr key={match.mid}>
                 {Object.values(match)
