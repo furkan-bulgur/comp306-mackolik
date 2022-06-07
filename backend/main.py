@@ -120,6 +120,16 @@ def get_player():
     pid = request.args.get("pid", default=None)
     return player(pid)
 
+#  fun fact1  /funfacts1
+@app.route('/funfacts1', methods=['GET'])
+def get_funfacts1():
+    return funfacts1()
+
+#  fun fact2  /funfacts2
+@app.route('/funfacts2', methods=['GET'])
+def get_funfacts2():
+    return funfacts2()    
+
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
     return team_matches(165)
@@ -384,6 +394,61 @@ def player(pid):
     league_json = convert_to_json(cursor)
     final_json = league_json[:-2] + ", \"info\": " + player_json + "}]"
     return final_json
+
+def funfacts1():
+    cursor = conn.cursor()
+    query = f"""
+    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    from team t, player p, plays_in pin, league l
+    where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%G%'
+    group by p.pid
+    having count(*) > 25
+    order by avg_rating DESC
+    limit 1)
+    UNION
+    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    from team t, player p, plays_in pin, league l
+    where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%D%'
+    group by p.pid
+    having count(*) > 25
+    order by avg_rating DESC
+    limit 4)
+    UNION
+    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    from team t, player p, plays_in pin, league l
+    where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%M%'
+    group by p.pid
+    having count(*) > 25
+    order by avg_rating DESC
+    limit 4)
+    UNION
+    (select p.pid, p.fname, p.lname, pin.position, t.name, avg(pin.rating) as avg_rating, count(*) as played_match
+    from team t, player p, plays_in pin, league l
+    where t.lid = l.lid and l.country = 'England' and p.tid=t.tid and p.pid = pin.pid and pin.position like '%F%'
+    group by p.pid
+    having count(*) > 25
+    order by avg_rating DESC
+    limit 2);"""
+    cursor.execute(query)
+    funfacts1_json = convert_to_json(cursor)
+    return funfacts1_json
+
+def funfacts2():
+    cursor = conn.cursor()
+    query = f"""
+    select ref_table.referee, count(*) / ref_table.games as home_win_rate, ref_table.games
+    from (select m.referee, count(*) as games
+        from matches m, plays p, team t1, team t2, league l
+        where m.mid = p.mid and t1.tid = p.home_tid and t2.tid = p.away_tid and t1.lid=l.lid and t2.lid=l.lid and l.country = 'England'
+        group by m.referee
+        having count(*) > 15) as ref_table,
+        matches m, plays p, team t1, team t2
+    where m.mid = p.mid and t1.tid = p.home_tid and t2.tid = p.away_tid and ref_table.referee = m.referee and m.home_goals > m.away_goals
+    group by ref_table.referee
+    order by home_win_rate DESC;"""
+    cursor.execute(query)
+    funfacts2_json = convert_to_json(cursor)
+    return funfacts2_json
 
 def team_matches(tid):
     cursor = conn.cursor()
