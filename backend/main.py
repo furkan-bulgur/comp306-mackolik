@@ -120,15 +120,29 @@ def get_player():
     pid = request.args.get("pid", default=None)
     return player(pid)
 
+# İngiltere liginde en az 25 maç oynayan oyuncular arasından maç başı ortalama ratinglere göre sezonun en iyi ilk 11'i (4-4-2) formasyonunda
 #  fun fact1  /funfacts1
 @app.route('/funfacts1', methods=['GET'])
 def get_funfacts1():
     return funfacts1()
 
+#İngiltere liginde en az 15 maçta görev alan hakemlerin yönettiği maçlarda ev sahibi takımın maç kazanma yüzdesi 
 #  fun fact2  /funfacts2
 @app.route('/funfacts2', methods=['GET'])
 def get_funfacts2():
     return funfacts2()    
+
+# İspnaya liginde her posizyonda en çok gol atan oyuncular ve attıkları goller
+#  fun fact3  /funfacts3
+@app.route('/funfacts3', methods=['GET'])
+def get_funfacts3():
+    return funfacts3()  
+
+#liglerin yaş ortalaması
+#  fun fact4  /funfacts4
+@app.route('/funfacts4', methods=['GET'])
+def get_funfacts4():
+    return funfacts4() 
 
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
@@ -449,6 +463,46 @@ def funfacts2():
     cursor.execute(query)
     funfacts2_json = convert_to_json(cursor)
     return funfacts2_json
+
+def funfacts3():
+    cursor = conn.cursor()
+    query = f"""
+    Select *
+    From
+    (select p.fname, p.lname, avg_table.position as position, max_table.max_goals
+    from (select T.position, max(T.goals) max_goals
+            from (select p2.pid, pin2.position as position, count(*) as played_match, sum(pin2.total_goals) as goals
+                                                    from team t2, player p2, plays_in pin2
+                                                    where t2.lid = 140 and p2.tid=t2.tid and p2.pid = pin2.pid
+                                                    group by p2.pid
+                                                    having count(*) > 25) as T
+            group by T.position) as max_table,
+        (select p2.pid, pin2.position as position, count(*) as played_match, sum(pin2.total_goals) as goals
+                                                    from team t2, player p2, plays_in pin2
+                                                    where t2.lid = 140 and p2.tid=t2.tid and p2.pid = pin2.pid
+                                                    group by p2.pid
+                                                    having count(*) > 25) as avg_table,
+            player p
+    where max_table.max_goals = avg_table.goals and max_table.position=avg_table.position and p.pid = avg_table.pid) as final_table
+    group by final_table.position"""
+    cursor.execute(query)
+    funfacts3_json = convert_to_json(cursor)
+    return funfacts3_json
+
+def funfacts4():
+    cursor = conn.cursor()
+    query = f"""
+    SELECT L.name AS LeagueName, round(sum(A.Ave)/count(*), 2) AS AvgAge
+    FROM league AS L, (SELECT T.lid, T.tid, T.name, avg(datediff(curdate(), P.birthdate))/365 AS Ave
+                    FROM team AS T, player AS P
+                    WHERE P.tid = T.tid
+                    GROUP BY T.tid) AS A
+    WHERE A.lid = L.lid
+    GROUP BY L.lid
+    ORDER BY AvgAge asc"""
+    cursor.execute(query)
+    funfacts4_json = convert_to_json(cursor)
+    return funfacts4_json
 
 def team_matches(tid):
     cursor = conn.cursor()
