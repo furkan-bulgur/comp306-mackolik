@@ -144,7 +144,7 @@ def get_funfacts3():
 def get_funfacts4():
     return funfacts4() 
 
-#liglerin yaş ortalaması
+#team captains with best average rating from every league
 #  fun fact5  /funfacts5
 @app.route('/funfacts5', methods=['GET'])
 def get_funfacts5():
