@@ -144,6 +144,12 @@ def get_funfacts3():
 def get_funfacts4():
     return funfacts4() 
 
+#liglerin yaş ortalaması
+#  fun fact5  /funfacts5
+@app.route('/funfacts5', methods=['GET'])
+def get_funfacts5():
+    return funfacts5()
+
 @app.route('/matches', methods=['GET'])
 def get_team_matches():
     return team_matches(165)
@@ -503,6 +509,21 @@ def funfacts4():
     cursor.execute(query)
     funfacts4_json = convert_to_json(cursor)
     return funfacts4_json
+
+def funfacts5():
+    cursor = conn.cursor()
+    query = f"""
+    SELECT *
+    FROM (SELECT l.name AS l_name, t.name AS t_name, p.fname, p.lname, round(sum(pi.rating)/count(*), 2) as avg_rating
+        FROM plays_in AS pi, player AS p, team AS t, league AS l
+        WHERE pi.pid = p.pid AND pi.is_captain = 1 AND p.tid = t.tid AND t.lid = l.lid
+        GROUP BY p.pid
+        ORDER BY avg_rating desc) AS Table1
+    GROUP BY Table1.l_name"""
+    cursor.execute(query)
+    funfacts5_json = convert_to_json(cursor)
+    return funfacts5_json   
+
 
 def team_matches(tid):
     cursor = conn.cursor()
