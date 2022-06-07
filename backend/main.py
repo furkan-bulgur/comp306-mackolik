@@ -566,24 +566,3 @@ class DatetimeEncoder(json.JSONEncoder):
         except TypeError:
             return str(obj)
 
-
-
-# Puan durumu ordered leagues/standings?lid=12 +
-# ligde kaçta hafta olduğunun döndüren leagues/weeks?lid=12 +
-# hafta velig parameteliyle o haftanın fistrü maçalrı leagues/fixtures?lid=12&week=21 +
-# gol krallığı ilk 10 leagues/scorers?lid=12 +
-# asist krallığı ilk 10 leagues/assisters?lid=12 +
-# disiplin tablosu ilk 10 leagues/cards?lid=12
-# takım idyi verince select all döndüren bi qurery teams?tid=123 +
-# takımlar listesi * ve isim sırasıda göre leagues/teams?lid=12 +
-
-# def league_standings(lid):
-#     cursor = conn.cursor()
-#     query = f"SELECT tid, name, played,won,draw,loss, goals_for,goals_against,goalsDiff,points FROM team as T WHERE lid={lid}  ORDER BY T.rank asc;"
-#     cursor.execute(query)
-#     standings_json = convert_to_json(cursor)
-#     query = f"SELECT lid, name FROM league WHERE lid={lid}"
-#     cursor.execute(query)
-#     league_json = convert_to_json(cursor)
-#     final_json = league_json[:-2] + ", \"standings\": " + standings_json + "}]"
-#     return final_json
